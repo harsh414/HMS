@@ -16,7 +16,7 @@ namespace Application.Entities
         public string phone { get; set; }
         public int dept_id { get; set; }
         public int dr_id { get; set; }
-        public bool Is_assigned { get; set; }
+        public bool is_assigned { get; set; }
         public int assigned_to_dr_id { get; set; }
     }
 }
