@@ -1,0 +1,9 @@
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\bin\Debug\Application.DataAccess.dll
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\bin\Debug\Application.DataAccess.pdb
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\obj\Debug\Application.DataAccess.csproj.AssemblyReference.cache
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\obj\Debug\Application.DataAccess.csproj.CoreCompileInputs.cache
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\obj\Debug\Application.DataAccess.dll
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\obj\Debug\Application.DataAccess.pdb
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\bin\Debug\Application.Entities.dll
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\bin\Debug\Application.Entities.pdb
+C:\UKG projects demo\HospitalManagement\Application.DataAccess\obj\Debug\Application.DataAccess.csproj.CopyComplete

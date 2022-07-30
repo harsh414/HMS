@@ -1,0 +1,13 @@
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Test.exe.config
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Test.exe
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Test.pdb
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Application.DataAccess.dll
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Application.Entities.dll
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Application.DataAccess.pdb
+C:\UKG projects demo\HospitalManagement\Test\bin\Debug\Application.Entities.pdb
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.csproj.AssemblyReference.cache
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.csproj.SuggestedBindingRedirects.cache
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.csproj.CopyComplete
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.exe
+C:\UKG projects demo\HospitalManagement\Test\obj\Debug\Test.pdb

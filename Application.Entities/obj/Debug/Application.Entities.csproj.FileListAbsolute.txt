@@ -1,0 +1,6 @@
+C:\UKG projects demo\HospitalManagement\Application.Entities\bin\Debug\Application.Entities.dll
+C:\UKG projects demo\HospitalManagement\Application.Entities\bin\Debug\Application.Entities.pdb
+C:\UKG projects demo\HospitalManagement\Application.Entities\obj\Debug\Application.Entities.csproj.AssemblyReference.cache
+C:\UKG projects demo\HospitalManagement\Application.Entities\obj\Debug\Application.Entities.csproj.CoreCompileInputs.cache
+C:\UKG projects demo\HospitalManagement\Application.Entities\obj\Debug\Application.Entities.dll
+C:\UKG projects demo\HospitalManagement\Application.Entities\obj\Debug\Application.Entities.pdb
