@@ -13,10 +13,12 @@ namespace HospitalManagementUI
     {
         IDataAccess<Doctor, int> doctorDbAccess;
         IDataAccess<Department, int> deptDbAccess;
+        IDataAccess<Patient, int> patientDbAccess;
         protected void Page_Load(object sender, EventArgs e)
         {
             deptDbAccess = new DepartmentDataAccess();
             doctorDbAccess = new DoctorDataAccess();
+            patientDbAccess = new PatientDataAccess();
             if (!IsPostBack)
             {
                 ListItem f_li = new ListItem("Select", "");
@@ -50,6 +52,14 @@ namespace HospitalManagementUI
             PatientDataAccess pad = new PatientDataAccess();
             gvPatients.DataSource = pad.GetPatientsForADoctor(dr_id);
             gvPatients.DataBind();
+        }
+
+        protected void gvPatients_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var cells = gvPatients.SelectedRow.Cells;
+            int p_id = Convert.ToInt32(cells[0].Text);
+            int recommended_by_dr_id = Convert.ToInt32(cells[1].Text);
+            Response.Redirect("AssignmentOFPatient.aspx?dr_id=" + recommended_by_dr_id+"&p_id="+p_id);
         }
     }
 }

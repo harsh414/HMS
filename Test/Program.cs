@@ -13,8 +13,8 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            IDataAccess<Doctor, int> pda = new DoctorDataAccess();
-            pda.Get();
+            IDataAccess<Patient, int> pda = new PatientDataAccess();
+            Console.WriteLine(pda.Get(1).p_name);
             
         }
     }

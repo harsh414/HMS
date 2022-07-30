@@ -41,15 +41,18 @@
         <h3>Filtered Patients</h3>
     <asp:GridView ID="gvPatients" runat="server" BackColor="Black" ShowHeaderWhenEmpty="true" 
     BorderColor="#33CCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" AutoGenerateColumns="False"
-        CellSpacing="2" 
+        CellSpacing="2" OnSelectedIndexChanged="gvPatients_SelectedIndexChanged"
          PageSize="2">
         <AlternatingRowStyle BackColor="#DCDCDC" />
         <Columns>
             <asp:BoundField DataField="id" ItemStyle-Width=10%  ReadOnly="true" HeaderText="Patient ID" >
 <ItemStyle Width="10%"></ItemStyle>
             </asp:BoundField>
+            <asp:BoundField DataField="dr_id" ItemStyle-Width=20%  HeaderText="OPD Doctor Id" >
+            </asp:BoundField>
             <asp:BoundField DataField="p_name" ItemStyle-Width=20%  HeaderText="Patient Name" >
             </asp:BoundField>
+            <asp:CommandField ButtonType="Button"  ShowSelectButton="True" SelectText="Assign To IPD Doctor"/>
         </Columns>
         <FooterStyle BackColor="#CCCCCC" ForeColor="Black" />
         <HeaderStyle BackColor="#33cc33" Font-Bold="True" ForeColor="White" />

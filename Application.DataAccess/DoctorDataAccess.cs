@@ -133,6 +133,7 @@ namespace Application.DataAccess
                 while (reader.Read())
                 {
                     Doctor doc = new Doctor();
+                    doc.id = Convert.ToInt32(reader["id"]);
                     doc.dr_name = reader["dr_name"].ToString();
                     doc.dept_id = Convert.ToInt32(reader["dept_id"]);
                     doctor = doc;
@@ -189,9 +190,6 @@ namespace Application.DataAccess
             return list;
         }
 
-        public void AssignToIPD(int p_id,dept_id)
-        {
-
-        }
+       
     }
 }
