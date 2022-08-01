@@ -16,8 +16,7 @@ namespace Application.DataAccess
 
         public RoomDataAccess()
         {
-            Conn = new SqlConnection("Data Source=IN-DWTTJM3;Initial Catalog=Miniproject;Integrated Security=SSPI");
-
+            Conn = new SqlConnection("Data Source=IN-9RVTJM3;Initial Catalog=HMS;Integrated Security=SSPI");
         }
 
         Room IDataAccess<Room, int>.Create(Room entity)

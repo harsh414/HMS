@@ -391,5 +391,36 @@ namespace Application.DataAccess
                 Conn.Close();
             }
         }
+
+        public bool isAlreadyAssignedToIPD(int p_id)
+        {
+            int inc = 0;
+            try
+            {
+                
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT id FROM Patient where id={p_id} and is_assigned=1 and assigned_to_dr_id>=1";
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    inc++;
+                }
+                reader.Close();
+                if(inc > 0) return true;
+                return false;   
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conn.Close();
+            }
+        }
     }
 }

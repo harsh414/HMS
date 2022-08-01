@@ -127,7 +127,7 @@ namespace Application.DataAccess
                 id.Direction = System.Data.ParameterDirection.Input;
                 id.Value = dr_id;
                 Cmd.Parameters.AddRange(new SqlParameter[] { id });
-
+                Cmd.ExecuteNonQuery();
 
                 SqlDataReader reader = Cmd.ExecuteReader();
                 while (reader.Read())

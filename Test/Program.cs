@@ -13,9 +13,14 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            IDataAccess<Patient, int> pda = new PatientDataAccess();
-            Console.WriteLine(pda.Get(1).p_name);
-            
+            IDataAccess<Medicine, int> t = new MedicineDataAccess();
+            var med =  (t.Get());
+            foreach (var medd in med)
+            {
+                Console.WriteLine($"{medd.id}, {medd.m_name},{medd.m_price}");
+            }
+
+            Console.ReadLine();
         }
     }
 }
