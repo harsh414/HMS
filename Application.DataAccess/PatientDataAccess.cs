@@ -289,6 +289,47 @@ namespace Application.DataAccess
             return patients;
         }
 
+        public List<Patient> GetPatientsInIpd()
+        {
+            List<Patient> patients = new List<Patient>();
+
+            try
+            {
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT * FROM Patient WHERE is_assigned = 1";
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Patient patient = new Patient();
+                    patient.id = Convert.ToInt32(reader["id"]);
+                    patient.p_name = reader["p_name"].ToString();
+                    patient.age = Convert.ToInt32(reader["age"]);
+                    patient.gender = reader["gender"].ToString();
+                    patient.address = reader["address"].ToString();
+                    patient.phone = reader["phone"].ToString();
+                    patient.dept_id = Convert.ToInt32(reader["dept_id"]);
+                    patient.dr_id = Convert.ToInt32(reader["dr_id"]);
+                    patient.assigned_to_dr_id = (reader["assigned_to_dr_id"] as int?).GetValueOrDefault();
+                    patient.is_assigned = Convert.ToBoolean(reader["is_assigned"]);
+                    patients.Add(patient);
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+            finally
+            {
+                Conn.Close();
+            }
+            return patients;
+        }
+
 
         public void AssignToIPD(Patient patient, int new_dr_id)
         {

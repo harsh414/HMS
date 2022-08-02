@@ -64,6 +64,7 @@
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/DataRegistration/PatientRegistration">Patient registration</a></li>  
                         <li><a runat="server" href="~/DepartmentWiseDoctorAndPatients">Doctor</a></li>  
+                        <li><a runat="server" href="~/PatientsInIpdandRoomAssignment">IPD Patients</a></li> 
                     </ul>
                 </div>
             </div>
