@@ -85,7 +85,7 @@ namespace Application.DataAccess
                 while (reader.Read())
                 {
                     Operation operation = new Operation();
-                    operation.id = Convert.ToInt32(reader["room_id"]);
+                    operation.id = Convert.ToInt32(reader["id"]);
                     operation.op_name = reader["op_name"].ToString();
                     operation.op_charge = (float)Convert.ToDouble(reader["op_charge"]);
                     op_list.Add(operation);

@@ -115,6 +115,7 @@
     <Content Include="DataRegistration\PatientRegistration.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="DepartmentWiseDoctorAndPatients.aspx" />
+    <Content Include="DisplayBill.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -199,6 +200,13 @@
     </Compile>
     <Compile Include="DepartmentWiseDoctorAndPatients.aspx.designer.cs">
       <DependentUpon>DepartmentWiseDoctorAndPatients.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DisplayBill.aspx.cs">
+      <DependentUpon>DisplayBill.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DisplayBill.aspx.designer.cs">
+      <DependentUpon>DisplayBill.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

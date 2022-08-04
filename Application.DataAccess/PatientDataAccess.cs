@@ -99,13 +99,58 @@ namespace Application.DataAccess
                     Console.WriteLine("Insert is Successfull");
                 else
                     Console.WriteLine("Insert Failed");
-                //Cmd = new SqlCommand();
-                //Cmd.Connection = Conn;
-                //Cmd.CommandType = System.Data.CommandType.Text;
-                //Cmd.CommandText = $"SELECT SCOPE_IDENTITY()";
-                ////Cmd.CommandText = $"Insert INTO PatientsSeenInOPD values({dr_id},{p.id})";
-                //Cmd.ExecuteNonQuery();
+
+                //*************************************
+           
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT MAX(ID) as new_p_id FROM Patient";
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    patient.id = Convert.ToInt32(reader["new_p_id"]);
+                    break;
+                }
+                reader.Close(); 
+
+
+                //**************************************************insert to patientsSeenInOPD
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                Cmd.CommandText = "sp_InsertPatientsSeenInOPD";
+
+                // Define Parameters Here
+
+                var dateTime = DateTime.Now;
+                var shortDateValue = dateTime.ToShortDateString();
+                SqlParameter doctor_id = new SqlParameter();
+                doctor_id.ParameterName = "@dr_id";
+                doctor_id.DbType = System.Data.DbType.Int32;
+                doctor_id.Direction = System.Data.ParameterDirection.Input;
+                doctor_id.Value = patient.dr_id;
+
+                SqlParameter patient_id = new SqlParameter();
+                patient_id.ParameterName = "@p_id";
+                patient_id.DbType = System.Data.DbType.Int32;
+                patient_id.Direction = System.Data.ParameterDirection.Input;
+                patient_id.Value = patient.id;
+
+                SqlParameter date_of_admitted = new SqlParameter();
+                date_of_admitted.ParameterName = "@date";
+                date_of_admitted.DbType = System.Data.DbType.Date;
+                date_of_admitted.Direction = System.Data.ParameterDirection.Input;
+                date_of_admitted.Value = shortDateValue ;
+
                 
+
+
+                // Add these parameters into the Parameters Collection of the SqlCommand Object
+                Cmd.Parameters.AddRange(new SqlParameter[] { doctor_id, patient_id, date_of_admitted});
+
+                 Result = Cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -422,6 +467,16 @@ namespace Application.DataAccess
                 {
                     Console.WriteLine("sds");
                 }
+
+                var dateTime = DateTime.Now;
+                var shortDateValue = dateTime.ToShortDateString();
+
+               
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"Insert into SeenByIPDDoctor Values({new_dr_id}, {patient.id}, '{shortDateValue}')";
+                Cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
@@ -431,6 +486,7 @@ namespace Application.DataAccess
             {
                 Conn.Close();
             }
+
         }
 
         public bool isAlreadyAssignedToIPD(int p_id)
@@ -463,5 +519,266 @@ namespace Application.DataAccess
                 Conn.Close();
             }
         }
+
+        public float GetPatientTotalBill(int patient_id)
+        {
+            Bill bill = new Bill();
+            bill.p_id = patient_id;
+            bill.consultancy_fee = 500;
+            float final_bill = 0;
+            try
+            {
+
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT Room.room_type,Alloted_room.date_admitted,Alloted_room.date_checkout,DATEDIFF(DAY, Alloted_room.date_admitted, Alloted_room.date_checkout) as no_of_days,Room.price" +
+                    $" FROM Room INNER JOIN Alloted_room ON room.id = Alloted_room.room_id where Alloted_room.p_id = {patient_id}";
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bill.room_type = reader["room_type"].ToString();
+                    bill.no_of_days = Convert.ToInt32(reader["no_of_days"]);
+                    bill.room_charge = bill.no_of_days * (float)Convert.ToDouble(reader["price"]);
+
+                }
+                reader.Close();
+
+
+                //query2
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT Doctor.dr_name as dr_name"+
+                    $" FROM Patient INNER JOIN Doctor ON patient.dr_id = doctor.id where Patient.id = {patient_id}";
+                Cmd.ExecuteNonQuery();
+                reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bill.dr_name = reader["dr_name"].ToString();
+                }
+                reader.Close();
+
+
+                //query3
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT Operations.op_charge as op_charge FROM Operations INNER JOIN Operations_to_Patient ON Operations.id = Operations_to_Patient.op_id where Operations_to_Patient.p_id ={patient_id}";
+                reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bill.op_charge = ((float)Convert.ToDouble(reader["op_charge"]) as float?).GetValueOrDefault();
+                }
+                reader.Close();
+
+
+                //query4
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT ISNULL(SUM(Test.price),0) as total_test_price FROM Test INNER JOIN Test_to_patient ON Test.id= Test_to_patient.test_id where Test_to_patient.p_id={patient_id}";
+                reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine(reader["total_test_price"]);
+                    
+                    bill.test_charge = ((float)Convert.ToDouble(reader["total_test_price"]) as float?).GetValueOrDefault();
+                }
+                reader.Close();
+
+
+                //query5
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT ISNULL(SUM(Medicine.m_price* PatientMedicineMap.m_quantity),0) as total_medicine_price FROM Medicine INNER JOIN PatientMedicineMap ON Medicine.id= PatientMedicineMap.m_id where PatientMedicineMap.p_id={patient_id}";
+                reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    bill.med_charge = ((float)Convert.ToDouble(reader["total_medicine_price"]) as float?).GetValueOrDefault();
+                }
+                reader.Close();
+
+                //(p_id,consultancy_fee,room_type,no_of_days,dr_name,op_charge,room_charge,test_charge,med_charge,)
+                //insert into BILLS;
+                final_bill += bill.room_charge + bill.consultancy_fee + bill.op_charge + bill.test_charge + bill.med_charge;
+                bill.final_bill = final_bill;
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"INSERT INTO Bill values({bill.p_id},{bill.consultancy_fee},'{bill.room_type}',{bill.no_of_days},'{bill.dr_name}',{bill.op_charge},{bill.room_charge},{bill.test_charge},{bill.med_charge},{bill.final_bill})";
+                int Result = Cmd.ExecuteNonQuery();
+                if(Result > 0)
+                {
+                    Console.WriteLine("Insert Successfull");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conn.Close();
+            }
+
+            
+            return final_bill;
+        }
+
+        public int AssignNurseToDept(int dept_id)
+        {
+            int nurse_id = 0;
+            try
+            {
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT TOP 1 id FROM Nurse where dept_id={dept_id}  ORDER BY NEWID()";
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    nurse_id = Convert.ToInt32(reader["id"]);
+                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conn.Close();
+            }
+
+            return nurse_id;
+        }
+
+
+
+        public int seenByNurse(int p_id, int new_nurse_id)
+        {
+            var dateTime = DateTime.Now;
+            var shortDateValue = dateTime.ToShortDateString();
+            try
+            {
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"Insert into SeenByNurse Values({new_nurse_id}, {p_id}, '{shortDateValue}')";
+                Cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conn.Close();
+            }
+            return 0;
+        }
+
+        
+        public List<Bill> PopulateBill(int patient_id)
+        {
+            List<Bill> list = new List<Bill>();
+            try
+            {
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                Cmd.CommandText = "sp_GetBillById";
+
+                SqlParameter p_id = new SqlParameter();
+                p_id.ParameterName = "@p_id";
+                p_id.DbType = System.Data.DbType.Int32;
+                p_id.Direction = System.Data.ParameterDirection.Input;
+                p_id.Value = patient_id;
+
+                Cmd.Parameters.AddRange(new SqlParameter[] { p_id });
+
+                Cmd.ExecuteNonQuery();
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Bill bill = new Bill();
+                    bill.id= Convert.ToInt32(reader["id"]);
+                    bill.p_id = Convert.ToInt32(reader["p_id"]);
+                    bill.consultancy_fee = (float)Convert.ToDouble(reader["consultancy_fee"]);
+                    
+                    bill.room_type = reader["room_type"].ToString();
+                    
+                    bill.no_of_days = Convert.ToInt32(reader["no_of_days"]);
+                    bill.dr_name = reader["dr_name"].ToString();
+                    bill.op_charge = (float)Convert.ToDouble(reader["op_charge"]);
+                    bill.room_charge = (float)Convert.ToDouble(reader["room_charge"]);
+                    bill.test_charge = (float)Convert.ToDouble(reader["test_charge"]);
+                    bill.med_charge = (float)Convert.ToDouble(reader["med_charge"]);
+                    
+                    bill.final_bill = (float)Convert.ToDouble(reader["final_bill"]);
+                    list.Add(bill);
+                }
+                reader.Close();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error while reading all records: {ex.Message}");
+            }
+            finally
+            {
+                Conn.Close();
+            }
+            return list;
+        }
+
+        public bool ifBillWasGenerated(int p_id)
+        {
+            try
+            {
+                Conn.Open();
+                Cmd = new SqlCommand();
+                Cmd.Connection = Conn;
+                Cmd.CommandType = System.Data.CommandType.Text;
+                Cmd.CommandText = $"SELECT count(id) as cnt FROM Bill where p_id={p_id}";
+                Cmd.ExecuteNonQuery();
+
+                SqlDataReader reader = Cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if(Convert.ToInt32(reader["cnt"]) > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                Conn.Close();
+            }
+
+            return false;
+        }
+
+
     }
+
+
 }

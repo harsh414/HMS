@@ -78,7 +78,8 @@ namespace HospitalManagementUI
                 PatientDataAccess pas = new PatientDataAccess();
                 int new_dr_id= pas.AssignDrToDept(doc.dept_id);
                 pas.AssignToIPD(pat, new_dr_id);
-
+                int new_nurse_id = pas.AssignNurseToDept(doc.dept_id);
+                pas.seenByNurse(pat.id, new_nurse_id);
             }
         }
 
@@ -106,6 +107,8 @@ namespace HospitalManagementUI
         {
             testSave();
             medicineSave();
+
+            if(ddlOperation.Enabled)
             OperationSave();
         }
 

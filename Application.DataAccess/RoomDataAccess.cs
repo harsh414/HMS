@@ -137,7 +137,9 @@ namespace Application.DataAccess
                 r_id.Value = room_id;
 
                 var dateTime = DateTime.Now;
+                var endDate= dateTime.AddDays(3); ;
                 var shortDateValue = dateTime.ToShortDateString();
+                var shortDateValue2 = endDate.ToShortDateString();
 
                 SqlParameter date_admitted = new SqlParameter();
                 date_admitted.ParameterName = "@date_admitted";
@@ -149,7 +151,7 @@ namespace Application.DataAccess
                 date_of_checkout.ParameterName = "@date_checkout";
                 date_of_checkout.DbType = System.Data.DbType.Date;
                 date_of_checkout.Direction = System.Data.ParameterDirection.Input;
-                date_of_checkout.Value = shortDateValue;
+                date_of_checkout.Value = shortDateValue2;
 
                 // Add these parameters into the Parameters Collection of the SqlCommand Object
                 Cmd.Parameters.AddRange(new SqlParameter[] { p_id, r_id, date_admitted, date_of_checkout });
